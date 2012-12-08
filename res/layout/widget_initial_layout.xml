@@ -6,5 +6,23 @@
   android:orientation="vertical" 
   android:layout_height="72dp"
   >
-    <Button android:text="@string/ButtonString" android:id="@+id/WidgetButton" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_gravity="center" android:shadowColor="#000000" android:textColor="#FFFFFF" android:shadowDx="2" android:shadowDy="2" android:shadowRadius="2" android:textSize="10sp" android:textStyle="bold" android:height="74px" android:width="74px"></Button>
+
+    <Button
+        android:id="@+id/WidgetButton"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/icon"
+        android:minHeight="40dp"
+        android:minWidth="40dp"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2"
+        android:text="@string/ButtonString"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold" >
+
+</Button>
 </LinearLayout>
