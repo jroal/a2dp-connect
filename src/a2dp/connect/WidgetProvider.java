@@ -19,18 +19,18 @@ public class WidgetProvider extends AppWidgetProvider {
 	 */
 	@Override
 	public void onEnabled(Context context) {
-		Toast.makeText(context, "onEnabled", Toast.LENGTH_LONG).show();
-		Intent intent = new Intent(context, MainActivity.class);
+		//Toast.makeText(context, "onEnabled", Toast.LENGTH_LONG).show();
+		/*Intent intent = new Intent(context, MainActivity.class);
 		intent.putExtra("ID", 1);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(intent);
+		context.startActivity(intent);*/
 		super.onEnabled(context);
 	}
 
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Toast.makeText(context, "onRecieve", Toast.LENGTH_LONG).show();
+		//Toast.makeText(context, "onRecieve", Toast.LENGTH_LONG).show();
 		super.onReceive(context, intent);
 	}
 
@@ -42,7 +42,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 		views.setOnClickPendingIntent(R.id.WidgetButton, pendingIntent);
 		appWidgetManager.updateAppWidget(appWidgetIds[0], views);*/
-		Toast.makeText(context, "onUpdate", Toast.LENGTH_LONG).show();
+		//Toast.makeText(context, "onUpdate", Toast.LENGTH_LONG).show();
 		final int N = appWidgetIds.length;
 
 		// Perform this loop procedure for each App Widget that belongs to this

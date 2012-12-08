@@ -4,5 +4,5 @@
   android:minHeight="40dp"
   android:updatePeriodMillis="0"
   android:initialLayout="@layout/widget_initial_layout"
-  android:minWidth="40dp">
+  android:minWidth="40dp" android:configure="a2dp.connect.MainActivity">
 </appwidget-provider>

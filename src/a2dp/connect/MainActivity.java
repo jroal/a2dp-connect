@@ -3,27 +3,37 @@ package a2dp.connect;
 import java.util.Set;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.appwidget.AppWidgetManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private String PREFS = "bluetoothlauncher";
+	int w_id = 0;
+	int mAppWidgetId;
 
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        Toast.makeText(this, "Made it to MainActivity oncreate", Toast.LENGTH_LONG).show();
 		Intent intent = getIntent();
-		int w_id = intent.getIntExtra("ID", 1);
-		
+		w_id = intent.getIntExtra("ID", 1);
+		//Toast.makeText(this, "Made it to MainActivity oncreate " + w_id, Toast.LENGTH_LONG).show();
 		config(String.valueOf(w_id));
+		Bundle extras = intent.getExtras();
+		if (extras != null) {
+			mAppWidgetId = extras.getInt(
+		            AppWidgetManager.EXTRA_APPWIDGET_ID, 
+		            AppWidgetManager.INVALID_APPWIDGET_ID);
+		}
     }
     
 public void config(final String id) {
@@ -68,10 +78,24 @@ public void config(final String id) {
 				SharedPreferences.Editor editor = preferences.edit();
 				editor.putString("widget" + id, temp[item][1]);
 				editor.commit();
+				done();
 			}
 		});
 		// AlertDialog alert = builder.create();
 		// alert.show();
 		builder.show();
+		
 	}
+
+void done(){
+	Context context = getBaseContext();
+	AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+	RemoteViews views = new RemoteViews(context.getPackageName(),
+			R.layout.widget_initial_layout);
+			appWidgetManager.updateAppWidget(mAppWidgetId, views);
+			Intent resultValue = new Intent();
+			resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+			setResult(RESULT_OK, resultValue);
+	this.finish();
+}
 }
