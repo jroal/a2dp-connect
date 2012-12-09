@@ -26,7 +26,7 @@ public class Connector extends Service {
 	/**
 	 * @see android.app.Activity#onCreate(Bundle)
 	 */
-	@Override
+
 	public void onCreate() {
 		super.onCreate();
 		application = getApplication();
@@ -64,6 +64,7 @@ public class Connector extends Service {
 		protected void onPostExecute(Boolean result) {
 
 			super.onPostExecute(result);
+			done();
 		}
 
 		BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
@@ -145,6 +146,7 @@ public class Connector extends Service {
 
 	private void done(){
 		//this.finish();
+		this.stopSelf();
 	}
 
 

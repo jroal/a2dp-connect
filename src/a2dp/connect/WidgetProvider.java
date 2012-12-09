@@ -64,8 +64,8 @@ public class WidgetProvider extends AppWidgetProvider {
 			// Tell the AppWidgetManager to perform an update on the current App
 			// Widget
 			appWidgetManager.updateAppWidget(appWidgetId, views);
-
+			
 		}
-		
+		super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 }
