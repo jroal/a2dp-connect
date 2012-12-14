@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">A2DP Connect</string>
     <string name="ButtonString">Connect</string>
+    <string name="InvalidDevice">Invalid Device</string>
+    <string name="NullDevice">Null Device</string>
+    <string name="Connecting">Connecting</string>
 </resources>

@@ -2,7 +2,7 @@ package a2dp.connect;
 
 import java.lang.reflect.Method;
 import java.util.Set;
-import android.app.Activity;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -17,34 +17,67 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class Connector extends Service {
+	@Override
+	protected void finalize() throws Throwable {
+		// TODO Auto-generated method stub
+		super.finalize();
+	}
+	
 	private String PREFS = "bluetoothlauncher";
 	private String LOG_TAG = "A2DP_Connect";
 	//private static final String MY_UUID_STRING = "af87c0d0-faac-11de-a839-0800200c9a67";
 	Context application;
 	int w_id;
 	
+	@Override
+	public IBinder onBind(Intent intent) {
+		
+		return null;
+	}
+	@Override
+	public void onStart(Intent intent, int startId) {
+		Bundle extras = intent.getExtras();
+		if (extras != null) {
+			w_id = extras.getInt("ID", 0);
+			//w_id = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+			//Toast.makeText(application, "ID = " + w_id, Toast.LENGTH_LONG).show();
+		}else{
+			Toast.makeText(application, "Oops", Toast.LENGTH_LONG).show();
+			done();
+		}
+		
+		SharedPreferences preferences = getSharedPreferences(PREFS,
+				MODE_WORLD_READABLE);
+		String bt_mac = preferences.getString(String.valueOf(w_id), "");
+		if(bt_mac != null)
+			if(bt_mac.length() == 17)
+			{
+				Toast.makeText(application, getString(R.string.Connecting) + "  " + bt_mac, Toast.LENGTH_LONG).show();
+				connectBluetoothA2dp(bt_mac);
+			
+			}else{
+				Toast.makeText(application, getString(R.string.InvalidDevice) + " " + bt_mac, Toast.LENGTH_LONG).show();
+				done();
+			}
+				
+		else{
+			Toast.makeText(application, getString(R.string.NullDevice), Toast.LENGTH_LONG).show();
+			done();
+		}
+		super.onStart(intent, startId);
+	}
 	/**
 	 * @see android.app.Activity#onCreate(Bundle)
 	 */
 
 	public void onCreate() {
-		super.onCreate();
+		//super.onCreate();
 		application = getApplication();
-		Toast.makeText(application, "At connector", Toast.LENGTH_LONG).show();
-		Intent intent = new Intent();
-		w_id = intent.getIntExtra("ID", 1);
-		SharedPreferences preferences = getSharedPreferences(PREFS,
-				MODE_WORLD_READABLE);
-		String bt_mac = preferences.getString("widget" + w_id, "");
-		if(bt_mac != null)
-			if(bt_mac.length() == 17)
-			{
-				connectBluetoothA2dp(bt_mac);
-			}
-			else
-				done();
-		else
-			done();
+		
+
+		//w_id = itent.getIntExtra("ID", 1);
+
+			
 		
 	}
 	
@@ -147,13 +180,13 @@ public class Connector extends Service {
 	private void done(){
 		//this.finish();
 		this.stopSelf();
+		
 	}
 
 
-	@Override
-	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
+
+
+
 	
 }
