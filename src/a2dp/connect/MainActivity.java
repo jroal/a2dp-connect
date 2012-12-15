@@ -21,6 +21,7 @@ public class MainActivity extends Activity {
 	// int w_id = 0;
 	int mAppWidgetId;
 	Context application;
+	String dname;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -45,7 +46,7 @@ public class MainActivity extends Activity {
 
 		BluetoothAdapter mBTA = BluetoothAdapter.getDefaultAdapter();
 		if (mBTA == null) {
-			Toast.makeText(this, "No Bluetooth", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.NoBluetooth, Toast.LENGTH_LONG).show();
 			return;
 		}
 		// Toast.makeText(this, "Bluetooth", Toast.LENGTH_LONG).show();
@@ -73,7 +74,7 @@ public class MainActivity extends Activity {
 		}
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Bluetooth Device");
+		builder.setTitle(R.string.BuilderTitle);
 		builder.setItems(lstring, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int item) {
 				// Use MODE_WORLD_READABLE and/or MODE_WORLD_WRITEABLE to grant
@@ -83,6 +84,7 @@ public class MainActivity extends Activity {
 				SharedPreferences.Editor editor = preferences.edit();
 				String ws = String.valueOf(id);
 				editor.putString(ws, temp[item][1]);
+				dname = temp[item][0];
 				editor.commit();
 				done();
 			}
@@ -94,10 +96,7 @@ public class MainActivity extends Activity {
 	void done() {
 		AppWidgetManager appWidgetManager = AppWidgetManager
 				.getInstance(application);
-		/*
-		 * Button txt = (Button)findResourceById(R.id.WidgetButton);
-		 * txt.setText("ID" + mAppWidgetId);
-		 */
+		
 		Intent intent = new Intent(application, Connector.class);
 		intent.putExtra("ID", mAppWidgetId);
 		PendingIntent pendingIntent = PendingIntent.getService(application, 0,
@@ -108,6 +107,8 @@ public class MainActivity extends Activity {
 		RemoteViews views = new RemoteViews(application.getPackageName(),
 				R.layout.widget_initial_layout);
 		views.setOnClickPendingIntent(R.id.WidgetButton, pendingIntent);
+		
+		views.setTextViewText(R.id.WidgetButton, dname);
 		appWidgetManager.updateAppWidget(mAppWidgetId, views);
 		Intent resultValue = new Intent();
 		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
