@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
 		
 		Intent intent = new Intent(application, Connector.class);
 		intent.putExtra("ID", mAppWidgetId);
-		PendingIntent pendingIntent = PendingIntent.getService(application, 0,
+		PendingIntent pendingIntent = PendingIntent.getService(application, mAppWidgetId,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		// Get the layout for the App Widget and attach an on-click listener

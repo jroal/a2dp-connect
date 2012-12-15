@@ -38,19 +38,16 @@ public class Connector extends Service {
 	}
 
 	@Override
-	public void onStart(Intent intent, int startId) {
+	public int onStartCommand(Intent intent,int flags, int startId) {
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			w_id = extras.getInt("ID", 0);
-			// w_id = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
-			// AppWidgetManager.INVALID_APPWIDGET_ID);
-			// Toast.makeText(application, "ID = " + w_id,
-			// Toast.LENGTH_LONG).show();
+			
 		} else {
 			Toast.makeText(application, "Oops", Toast.LENGTH_LONG).show();
 			done();
 		}
-
+		
 		SharedPreferences preferences = getSharedPreferences(PREFS,
 				MODE_WORLD_READABLE);
 		String bt_mac = preferences.getString(String.valueOf(w_id), "");
@@ -116,7 +113,8 @@ public class Connector extends Service {
 					Toast.LENGTH_LONG).show();
 			done();
 		}
-		super.onStart(intent, startId);
+		return START_STICKY;
+		//super.onStart(intent, startId);
 	}
 
 	/**

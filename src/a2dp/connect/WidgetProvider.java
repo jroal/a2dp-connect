@@ -55,7 +55,7 @@ public class WidgetProvider extends AppWidgetProvider {
 			// Create an Intent to launch
 			Intent intent = new Intent(context, Connector.class);
 			intent.putExtra("ID", appWidgetId);
-			PendingIntent pendingIntent = PendingIntent.getService(context, 0,
+			PendingIntent pendingIntent = PendingIntent.getService(context, appWidgetId,
 					intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 			// Get the layout for the App Widget and attach an on-click listener
@@ -79,8 +79,7 @@ public class WidgetProvider extends AppWidgetProvider {
 			// Tell the AppWidgetManager to perform an update on the current App
 			// Widget
 			appWidgetManager.updateAppWidget(appWidgetId, views);
-			// Toast.makeText(context, "made it to update",
-			// Toast.LENGTH_LONG).show();
+			
 		}
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
