@@ -49,6 +49,22 @@ public class MainActivity extends Activity {
 			Toast.makeText(this, R.string.NoBluetooth, Toast.LENGTH_LONG).show();
 			return;
 		}
+		// If Bluetooth is not yet enabled, enable it
+					if (!mBTA.isEnabled()) {
+						Toast.makeText(application, R.string.NeedEnable, Toast.LENGTH_LONG).show();
+						this.finish();
+						/*Intent enableBluetooth = new Intent(
+								BluetoothAdapter.ACTION_REQUEST_ENABLE);
+						try {
+							startActivity(enableBluetooth);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						// Now implement the onActivityResult() and wait for it to
+						// be invoked with ENABLE_BLUETOOTH
+						// onActivityResult(ENABLE_BLUETOOTH, result, enableBluetooth);
+*/						return ;
+					}
 		// Toast.makeText(this, "Bluetooth", Toast.LENGTH_LONG).show();
 		int i = 0;
 		final String temp[][] = new String[50][2];
@@ -118,4 +134,5 @@ public class MainActivity extends Activity {
 		//Toast.makeText(this, "done " + mAppWidgetId, Toast.LENGTH_LONG).show();
 		finish();
 	}
+	
 }

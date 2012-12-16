@@ -44,6 +44,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		final int N = appWidgetIds.length;
 
 		BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
+		if (!bta.isEnabled()) return;
 		Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
 		SharedPreferences preferences = context.getSharedPreferences(PREFS,
 				0);

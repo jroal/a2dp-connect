@@ -8,4 +8,5 @@
     <string name="Disconnecting">Disconnecting</string>
     <string name="BuilderTitle">Bluetooth Device</string>
     <string name="NoBluetooth">Device does not have Bluetooth enabled</string>
+    <string name="NeedEnable">Bluetooth must be enabled before you can place a widget</string>
 </resources>
