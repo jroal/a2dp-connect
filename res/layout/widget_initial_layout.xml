@@ -13,6 +13,7 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:background="@drawable/icon"
+        android:gravity="center_vertical|center_horizontal"
         android:minHeight="40dp"
         android:minWidth="40dp"
         android:shadowColor="#000000"

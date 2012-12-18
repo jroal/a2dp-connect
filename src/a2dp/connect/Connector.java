@@ -23,7 +23,7 @@ public class Connector extends Service {
 		// TODO Auto-generated method stub
 		super.finalize();
 	}
-
+	static final int ENABLE_BLUETOOTH = 1;
 	private String PREFS = "bluetoothlauncher";
 	private String LOG_TAG = "A2DP_Connect";
 	// private static final String MY_UUID_STRING =
@@ -55,6 +55,16 @@ public class Connector extends Service {
 			if (bt_mac.length() == 17) {
 				IBluetoothA2dp ibta = getIBluetoothA2dp2();
 				BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
+				
+				if(!bta.isEnabled()){
+					Intent btIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+					btIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					application.startActivity(btIntent);
+					
+					return START_REDELIVER_INTENT;
+				}
+				
+				
 				Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
 				BluetoothDevice device = null;
 				String dname = bt_mac;
@@ -113,7 +123,7 @@ public class Connector extends Service {
 					Toast.LENGTH_LONG).show();
 			done();
 		}
-		return START_STICKY;
+		return START_NOT_STICKY;
 		//super.onStart(intent, startId);
 	}
 
@@ -264,5 +274,34 @@ public class Connector extends Service {
 		}
 		return ibta;
 	}
+	
+/*	// Listen for results.
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// See which child activity is calling us back.
+
+		if (resultCode == Activity.RESULT_OK) {
+			switch (requestCode) {
+			case ENABLE_BLUETOOTH:
+				// This is the standard resultCode that is sent back if the
+				// activity crashed or didn't doesn't supply an explicit result.
+				if (resultCode == Activity.RESULT_CANCELED) {
+					Toast.makeText(application, R.string.BTNotEnabled,
+							Toast.LENGTH_LONG).show();
+					
+				} else {
+
+					
+				}
+				break;
+			
+			
+			default:
+				break;
+			}
+		}
+		
+		
+	}*/
+
 
 }

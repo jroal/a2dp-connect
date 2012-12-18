@@ -1,5 +1,6 @@
 package a2dp.connect;
 
+import java.lang.reflect.Method;
 import java.util.Set;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,11 +8,14 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.IBluetooth;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -74,8 +78,24 @@ public class MainActivity extends Activity {
 
 			if (pairedDevices.size() > 0) {
 				// Loop through paired devices
+				IBluetooth ibta = getIBluetooth();
 				for (BluetoothDevice device : pairedDevices) {
-					temp[i][0] = device.getName();
+					String name;
+					if (android.os.Build.VERSION.SDK_INT >= 14 && android.os.Build.VERSION.SDK_INT <= 16){
+						try {
+							name = ibta.getRemoteAlias(device.getAddress());
+							//Toast.makeText(application, "try made it" + name, Toast.LENGTH_LONG).show();
+						} catch (RemoteException e) {
+							name = device.getName();
+							//Toast.makeText(application, "try failed" + name, Toast.LENGTH_LONG).show();
+							e.printStackTrace();								
+						}
+						if(name == null)name = device.getName();
+						}
+					else
+						name = device.getName();
+					
+					temp[i][0] = name;
 					temp[i][1] = device.getAddress();
 					if (i > 48)
 						break;
@@ -135,4 +155,31 @@ public class MainActivity extends Activity {
 		finish();
 	}
 	
+	private IBluetooth getIBluetooth() {
+
+		IBluetooth ibta = null;
+
+		try {
+
+			Class<?> c2 = Class.forName("android.os.ServiceManager");
+
+			Method m2 = c2.getDeclaredMethod("getService", String.class);
+			IBinder b = (IBinder) m2.invoke(null, "bluetooth");
+
+			Class<?> c3 = Class.forName("android.bluetooth.IBluetooth");
+
+			Class[] s2 = c3.getDeclaredClasses();
+
+			Class<?> c = s2[0];
+			// printMethods(c);
+			Method m = c.getDeclaredMethod("asInterface", IBinder.class);
+
+			m.setAccessible(true);
+			ibta = (IBluetooth) m.invoke(null, b);
+
+		} catch (Exception e) {
+			
+		}
+		return ibta;
+	}
 }
