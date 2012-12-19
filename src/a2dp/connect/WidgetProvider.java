@@ -7,16 +7,19 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.IBluetooth;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import android.os.RemoteException;
 import android.widget.RemoteViews;
 
 public class WidgetProvider extends AppWidgetProvider {
 
 	private String PREFS = "bluetoothlauncher";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -44,10 +47,10 @@ public class WidgetProvider extends AppWidgetProvider {
 		final int N = appWidgetIds.length;
 
 		BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
-		if (!bta.isEnabled()) return;
+		if (!bta.isEnabled())
+			return;
 		Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
-		SharedPreferences preferences = context.getSharedPreferences(PREFS,
-				0);
+		SharedPreferences preferences = context.getSharedPreferences(PREFS, 0);
 		// Perform this loop procedure for each App Widget that belongs to this
 		// provider
 		for (int i = 0; i < N; i++) {
@@ -56,8 +59,8 @@ public class WidgetProvider extends AppWidgetProvider {
 			// Create an Intent to launch
 			Intent intent = new Intent(context, Connector.class);
 			intent.putExtra("ID", appWidgetId);
-			PendingIntent pendingIntent = PendingIntent.getService(context, appWidgetId,
-					intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent pendingIntent = PendingIntent.getService(context,
+					appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 			// Get the layout for the App Widget and attach an on-click listener
 			// to the button
@@ -71,16 +74,17 @@ public class WidgetProvider extends AppWidgetProvider {
 			BluetoothDevice device = null;
 			String dname = bt_mac;
 			for (BluetoothDevice dev : pairedDevices) {
-				if (dev.getAddress().equalsIgnoreCase(bt_mac)){
+				if (dev.getAddress().equalsIgnoreCase(bt_mac)) {
 					device = dev;
-				dname = device.getName();
+					dname = a2dp.connect.Bt_iadl.getName(device);
+					// get custom name for ICS and up
 				}
 			}
 			views.setTextViewText(R.id.WidgetButton, dname);
 			// Tell the AppWidgetManager to perform an update on the current App
 			// Widget
 			appWidgetManager.updateAppWidget(appWidgetId, views);
-			
+
 		}
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}

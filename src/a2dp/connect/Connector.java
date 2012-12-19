@@ -6,6 +6,7 @@ import java.util.Set;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.IBluetooth;
 import android.bluetooth.IBluetoothA2dp;
 import android.content.Context;
 import android.content.Intent;
@@ -53,7 +54,7 @@ public class Connector extends Service {
 		String bt_mac = preferences.getString(String.valueOf(w_id), "");
 		if (bt_mac != null)
 			if (bt_mac.length() == 17) {
-				IBluetoothA2dp ibta = getIBluetoothA2dp2();
+				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp();
 				BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
 				
 				if(!bta.isEnabled()){
@@ -71,10 +72,12 @@ public class Connector extends Service {
 				for (BluetoothDevice dev : pairedDevices) {
 					if (dev.getAddress().equalsIgnoreCase(bt_mac)){
 						device = dev;
-					dname = device.getName();
+						dname = a2dp.connect.Bt_iadl.getName(device);
+					
 					}
 				}
 				if (android.os.Build.VERSION.SDK_INT < 11) {
+					
 					try {
 						if (ibta != null && ibta.getSinkState(device) == 0) {
 							Toast.makeText(
@@ -92,6 +95,7 @@ public class Connector extends Service {
 						e.printStackTrace();
 					}
 				}else{
+					
 					try {
 						if (ibta != null && ibta.getConnectionState(device) == 0) {
 							Toast.makeText(
@@ -181,7 +185,7 @@ public class Connector extends Service {
 
 			if (android.os.Build.VERSION.SDK_INT < 11) {
 
-				IBluetoothA2dp ibta = getIBluetoothA2dp();
+				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp();
 				try {
 					Log.d(LOG_TAG, "Here: " + ibta.getSinkPriority(device));
 					if (ibta != null && ibta.getSinkState(device) == 0)
@@ -193,7 +197,7 @@ public class Connector extends Service {
 					Log.e(LOG_TAG, "Error " + e.getMessage());
 				}
 			} else {
-				IBluetoothA2dp ibta = getIBluetoothA2dp();
+				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp();
 				try {
 					Log.d(LOG_TAG, "Here: " + ibta.getPriority(device));
 					if (ibta != null && ibta.getConnectionState(device) == 0)
@@ -208,35 +212,6 @@ public class Connector extends Service {
 			return true;
 		}
 
-		private IBluetoothA2dp getIBluetoothA2dp() {
-
-			IBluetoothA2dp ibta = null;
-
-			try {
-
-				Class<?> c2 = Class.forName("android.os.ServiceManager");
-
-				Method m2 = c2.getDeclaredMethod("getService", String.class);
-				IBinder b = (IBinder) m2.invoke(null, "bluetooth_a2dp");
-
-				Log.d(LOG_TAG, "Test2: " + b.getInterfaceDescriptor());
-
-				Class<?> c3 = Class.forName("android.bluetooth.IBluetoothA2dp");
-
-				Class[] s2 = c3.getDeclaredClasses();
-
-				Class<?> c = s2[0];
-				// printMethods(c);
-				Method m = c.getDeclaredMethod("asInterface", IBinder.class);
-
-				m.setAccessible(true);
-				ibta = (IBluetoothA2dp) m.invoke(null, b);
-
-			} catch (Exception e) {
-				Log.e(LOG_TAG, "Error " + e.getMessage());
-			}
-			return ibta;
-		}
 	}
 
 	private void done() {
@@ -245,36 +220,7 @@ public class Connector extends Service {
 
 	}
 
-	private IBluetoothA2dp getIBluetoothA2dp2() {
 
-		IBluetoothA2dp ibta = null;
-
-		try {
-
-			Class<?> c2 = Class.forName("android.os.ServiceManager");
-
-			Method m2 = c2.getDeclaredMethod("getService", String.class);
-			IBinder b = (IBinder) m2.invoke(null, "bluetooth_a2dp");
-
-			Log.d(LOG_TAG, "Test2: " + b.getInterfaceDescriptor());
-
-			Class<?> c3 = Class.forName("android.bluetooth.IBluetoothA2dp");
-
-			Class[] s2 = c3.getDeclaredClasses();
-
-			Class<?> c = s2[0];
-			// printMethods(c);
-			Method m = c.getDeclaredMethod("asInterface", IBinder.class);
-
-			m.setAccessible(true);
-			ibta = (IBluetoothA2dp) m.invoke(null, b);
-
-		} catch (Exception e) {
-			Log.e(LOG_TAG, "Error " + e.getMessage());
-		}
-		return ibta;
-	}
-	
 /*	// Listen for results.
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// See which child activity is calling us back.
