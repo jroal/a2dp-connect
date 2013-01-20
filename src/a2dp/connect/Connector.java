@@ -24,6 +24,7 @@ public class Connector extends Service {
 		// TODO Auto-generated method stub
 		super.finalize();
 	}
+
 	static final int ENABLE_BLUETOOTH = 1;
 	private String PREFS = "bluetoothlauncher";
 	private String LOG_TAG = "A2DP_Connect";
@@ -39,52 +40,61 @@ public class Connector extends Service {
 	}
 
 	@Override
-	public int onStartCommand(Intent intent,int flags, int startId) {
+	public int onStartCommand(Intent intent, int flags, int startId) {
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			w_id = extras.getInt("ID", 0);
-			
+
 		} else {
 			Toast.makeText(application, "Oops", Toast.LENGTH_LONG).show();
 			done();
 		}
-		
+
 		SharedPreferences preferences = getSharedPreferences(PREFS,
 				MODE_WORLD_READABLE);
 		String bt_mac = preferences.getString(String.valueOf(w_id), "");
 		if (bt_mac != null)
 			if (bt_mac.length() == 17) {
-				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp(this.getBaseContext());
-				BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
 				
-				if(ibta == null){
-					Toast.makeText(application, getString(R.string.InterfaceError),
+				IBluetoothA2dp ibta;
+				if (android.os.Build.VERSION.SDK_INT <= 16) {
+					ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp(this
+							.getBaseContext());
+				} else {
+					ibta = a2dp.connect.Bt_iadl.ibta2;
+				}
+
+				BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
+
+				if (ibta == null) {
+					Toast.makeText(application,
+							getString(R.string.InterfaceError),
 							Toast.LENGTH_LONG).show();
 					return START_NOT_STICKY;
 				}
-				
-				if(!bta.isEnabled()){
-					Intent btIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+
+				if (!bta.isEnabled()) {
+					Intent btIntent = new Intent(
+							BluetoothAdapter.ACTION_REQUEST_ENABLE);
 					btIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					application.startActivity(btIntent);
-					
+
 					return START_REDELIVER_INTENT;
 				}
-				
-				
+
 				Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
 				BluetoothDevice device = null;
 				String dname = bt_mac;
 				for (BluetoothDevice dev : pairedDevices) {
-					if (dev.getAddress().equalsIgnoreCase(bt_mac)){
+					if (dev.getAddress().equalsIgnoreCase(bt_mac)) {
 						device = dev;
 						dname = a2dp.connect.Bt_iadl.getName(device);
-					
+
 					}
 				}
 
 				if (android.os.Build.VERSION.SDK_INT < 11) {
-					
+
 					try {
 						if (ibta != null && ibta.getSinkState(device) == 0) {
 							Toast.makeText(
@@ -101,10 +111,11 @@ public class Connector extends Service {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}else{
-					
+				} else {
+
 					try {
-						if (ibta != null && ibta.getConnectionState(device) == 0) {
+						if (ibta != null
+								&& ibta.getConnectionState(device) == 0) {
 							Toast.makeText(
 									application,
 									getString(R.string.Connecting) + "  "
@@ -135,7 +146,7 @@ public class Connector extends Service {
 			done();
 		}
 		return START_NOT_STICKY;
-		//super.onStart(intent, startId);
+		// super.onStart(intent, startId);
 	}
 
 	/**
@@ -169,7 +180,7 @@ public class Connector extends Service {
 		BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
 
 		protected void onPreExecute() {
-	
+
 		}
 
 		@Override
@@ -193,7 +204,8 @@ public class Connector extends Service {
 
 			if (android.os.Build.VERSION.SDK_INT < 11) {
 
-				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp(a2dp.connect.Connector.this);
+				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl
+						.getIBluetoothA2dp(a2dp.connect.Connector.this);
 				try {
 					Log.d(LOG_TAG, "Here: " + ibta.getSinkPriority(device));
 					if (ibta != null && ibta.getSinkState(device) == 0)
@@ -205,7 +217,8 @@ public class Connector extends Service {
 					Log.e(LOG_TAG, "Error " + e.getMessage());
 				}
 			} else {
-				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp(a2dp.connect.Connector.this);
+				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl
+						.getIBluetoothA2dp(a2dp.connect.Connector.this);
 				try {
 					Log.d(LOG_TAG, "Here: " + ibta.getPriority(device));
 					if (ibta != null && ibta.getConnectionState(device) == 0)
@@ -228,34 +241,27 @@ public class Connector extends Service {
 
 	}
 
-
-/*	// Listen for results.
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// See which child activity is calling us back.
-
-		if (resultCode == Activity.RESULT_OK) {
-			switch (requestCode) {
-			case ENABLE_BLUETOOTH:
-				// This is the standard resultCode that is sent back if the
-				// activity crashed or didn't doesn't supply an explicit result.
-				if (resultCode == Activity.RESULT_CANCELED) {
-					Toast.makeText(application, R.string.BTNotEnabled,
-							Toast.LENGTH_LONG).show();
-					
-				} else {
-
-					
-				}
-				break;
-			
-			
-			default:
-				break;
-			}
-		}
-		
-		
-	}*/
-
+	/*
+	 * // Listen for results. protected void onActivityResult(int requestCode,
+	 * int resultCode, Intent data) { // See which child activity is calling us
+	 * back.
+	 * 
+	 * if (resultCode == Activity.RESULT_OK) { switch (requestCode) { case
+	 * ENABLE_BLUETOOTH: // This is the standard resultCode that is sent back if
+	 * the // activity crashed or didn't doesn't supply an explicit result. if
+	 * (resultCode == Activity.RESULT_CANCELED) { Toast.makeText(application,
+	 * R.string.BTNotEnabled, Toast.LENGTH_LONG).show();
+	 * 
+	 * } else {
+	 * 
+	 * 
+	 * } break;
+	 * 
+	 * 
+	 * default: break; } }
+	 * 
+	 * 
+	 * }
+	 */
 
 }
