@@ -54,8 +54,14 @@ public class Connector extends Service {
 		String bt_mac = preferences.getString(String.valueOf(w_id), "");
 		if (bt_mac != null)
 			if (bt_mac.length() == 17) {
-				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp();
+				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp(this.getBaseContext());
 				BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
+				
+				if(ibta == null){
+					Toast.makeText(application, getString(R.string.InterfaceError),
+							Toast.LENGTH_LONG).show();
+					return START_NOT_STICKY;
+				}
 				
 				if(!bta.isEnabled()){
 					Intent btIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -76,6 +82,7 @@ public class Connector extends Service {
 					
 					}
 				}
+
 				if (android.os.Build.VERSION.SDK_INT < 11) {
 					
 					try {
@@ -162,6 +169,7 @@ public class Connector extends Service {
 		BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
 
 		protected void onPreExecute() {
+	
 		}
 
 		@Override
@@ -185,7 +193,7 @@ public class Connector extends Service {
 
 			if (android.os.Build.VERSION.SDK_INT < 11) {
 
-				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp();
+				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp(a2dp.connect.Connector.this);
 				try {
 					Log.d(LOG_TAG, "Here: " + ibta.getSinkPriority(device));
 					if (ibta != null && ibta.getSinkState(device) == 0)
@@ -197,7 +205,7 @@ public class Connector extends Service {
 					Log.e(LOG_TAG, "Error " + e.getMessage());
 				}
 			} else {
-				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp();
+				IBluetoothA2dp ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp(a2dp.connect.Connector.this);
 				try {
 					Log.d(LOG_TAG, "Here: " + ibta.getPriority(device));
 					if (ibta != null && ibta.getConnectionState(device) == 0)

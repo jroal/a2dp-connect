@@ -10,4 +10,5 @@
     <string name="NoBluetooth">Device does not have Bluetooth enabled</string>
     <string name="NeedEnable">Bluetooth must be enabled before you can place a widget</string>
     <string name="BTNotEnabled">Bluetooth not enabled</string>
+    <string name="InterfaceError">Interface error</string>
 </resources>
