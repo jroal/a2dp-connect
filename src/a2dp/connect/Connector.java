@@ -1,12 +1,10 @@
 package a2dp.connect;
 
-import java.lang.reflect.Method;
 import java.util.Set;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.IBluetooth;
 import android.bluetooth.IBluetoothA2dp;
 import android.content.Context;
 import android.content.Intent;
