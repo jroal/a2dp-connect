@@ -47,9 +47,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		final int N = appWidgetIds.length;
 
 		BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
-		if (!bta.isEnabled())
-			return;
-		Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
+
 		SharedPreferences preferences = context.getSharedPreferences(PREFS, 0);
 		// Perform this loop procedure for each App Widget that belongs to this
 		// provider
@@ -71,15 +69,21 @@ public class WidgetProvider extends AppWidgetProvider {
 
 			String WidgetId = String.valueOf(appWidgetId);
 			String bt_mac = preferences.getString(WidgetId, "Oops");
-			BluetoothDevice device = null;
-			String dname = bt_mac;
-			for (BluetoothDevice dev : pairedDevices) {
-				if (dev.getAddress().equalsIgnoreCase(bt_mac)) {
-					device = dev;
-					dname = a2dp.connect.Bt_iadl.getName(device);
-					// get custom name for ICS and up
+			String dname = preferences.getString(WidgetId + "_name", "Connect " + i);
+			
+			if (bta.isEnabled()) {
+				BluetoothDevice device = null;
+				dname = bt_mac;
+				Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
+				for (BluetoothDevice dev : pairedDevices) {
+					if (dev.getAddress().equalsIgnoreCase(bt_mac)) {
+						device = dev;
+						dname = a2dp.connect.Bt_iadl.getName(device);
+						// get custom name for ICS and up
+					}
 				}
 			}
+
 			views.setTextViewText(R.id.WidgetButton, dname);
 			// Tell the AppWidgetManager to perform an update on the current App
 			// Widget

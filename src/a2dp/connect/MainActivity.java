@@ -106,6 +106,7 @@ public class MainActivity extends Activity {
 				String ws = String.valueOf(id);
 				editor.putString(ws, temp[item][1]);
 				dname = temp[item][0];
+				editor.putString(ws + "_name", dname);
 				editor.commit();
 				done();
 			}
