@@ -1,5 +1,6 @@
 package a2dp.connect;
 
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import android.app.Service;
@@ -47,19 +48,20 @@ public class Connector extends Service {
 			Toast.makeText(application, "Oops", Toast.LENGTH_LONG).show();
 			done();
 		}
-
+		
 		SharedPreferences preferences = getSharedPreferences(PREFS,
-				MODE_WORLD_READABLE);
+				0);
 		String bt_mac = preferences.getString(String.valueOf(w_id), "");
 		if (bt_mac != null)
 			if (bt_mac.length() == 17) {
 				
-				IBluetoothA2dp ibta;
+				IBluetoothA2dp ibta = null;
 				if (android.os.Build.VERSION.SDK_INT <= 16) {
 					ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp(this
 							.getBaseContext());
 				} else {
-					ibta = a2dp.connect.Bt_iadl.ibta2;
+					ibta = a2dp.connect.Bt_iadl.getIBluetoothA2dp(this
+							.getBaseContext());
 				}
 
 				BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
@@ -109,6 +111,7 @@ public class Connector extends Service {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					connectBluetoothA2dp(bt_mac);
 				} else {
 
 					try {
@@ -128,8 +131,9 @@ public class Connector extends Service {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}
-				connectBluetoothA2dp(bt_mac);
+					connectBluetoothA2dp(bt_mac);
+				} 
+				
 
 			} else {
 				Toast.makeText(application,
@@ -157,6 +161,7 @@ public class Connector extends Service {
 
 	}
 
+	
 	private void connectBluetoothA2dp(String device) {
 		new ConnectBt().execute(device);
 	}

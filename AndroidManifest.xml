@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest android:versionCode="14" android:versionName="1.0.13"
+<manifest android:versionCode="15" android:versionName="1.0.14"
     package="a2dp.connect" xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16" android:maxSdkVersion="16"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16"/>
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:allowBackup="true">
         <activity android:label="@string/app_name" android:name="MainActivity" android:enabled="true">
             <intent-filter>

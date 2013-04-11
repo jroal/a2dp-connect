@@ -27,7 +27,7 @@ public class Bt_iadl {
 			} catch (RemoteException e) {
 				dname = device.getName();
 
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			if (dname == null)
 				dname = device.getName();
@@ -36,20 +36,7 @@ public class Bt_iadl {
 		return dname;
 	}
 
-	public static ServiceConnection mConnection = new ServiceConnection() {
-		//IBluetoothA2dp ibta;
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			ibta2 = IBluetoothA2dp.Stub.asInterface(service);
-		}
 
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
-
-		}
-
-	};
 
 	public static IBluetoothA2dp getIBluetoothA2dp(Context context) {
 
@@ -77,36 +64,38 @@ public class Bt_iadl {
 			}
 		} else {
 
-			// ServiceConnection mConnection = null;
-			// Context context = getContext();
-			if (context.bindService(new Intent(IBluetoothA2dp.class.getName()),
-					mConnection, 0)) {
-
-				//ibta = (IBluetoothA2dp) mConnection;
+			Intent i = new Intent(IBluetoothA2dp.class.getName());
+			
+			if (context.bindService(i, mConnection, Context.BIND_AUTO_CREATE)) {
+				
+				return ibta2;
+				
 			} else {
 
 				// Log.e(TAG, "Could not bind to Bluetooth A2DP Service");
 			}
 
-			/*
-			 * try { Class<?> classServiceManager = Class
-			 * .forName("android.content.ServiceConnection"); Method
-			 * methodGetService = classServiceManager.getMethod( "getService",
-			 * String.class); IBinder binder = (IBinder)
-			 * methodGetService.invoke(null, "bluetooth_a2dp"); ibta =
-			 * IBluetoothA2dp.Stub.asInterface(binder); } catch
-			 * (ClassNotFoundException e) { e.printStackTrace(); } catch
-			 * (SecurityException e) { e.printStackTrace(); } catch
-			 * (NoSuchMethodException e) { e.printStackTrace(); } catch
-			 * (IllegalArgumentException e) { e.printStackTrace(); } catch
-			 * (IllegalAccessException e) { e.printStackTrace(); } catch
-			 * (InvocationTargetException e) { e.printStackTrace(); }
-			 */
 		}
 
 		return ibta;
 	}
 
+	public static ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			
+			ibta2 = IBluetoothA2dp.Stub.asInterface(service);
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			// TODO Auto-generated method stub
+
+		}
+
+	};
+	
 	public static IBluetooth getIBluetooth() {
 
 		IBluetooth ibt = null;
@@ -134,4 +123,6 @@ public class Bt_iadl {
 		}
 		return ibt;
 	}
+	
+	
 }
